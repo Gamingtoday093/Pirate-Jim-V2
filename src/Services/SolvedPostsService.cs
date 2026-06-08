@@ -228,7 +228,7 @@ public class SolvedPostsService : IService, IInitializableService
             await respondAsync("Unable to mark locked thread as solved.");
             return;
         }
-        if (thread.Owner.Id != user.Id && (user is not IGuildUser guildUser || !guildUser.GuildPermissions.ManageThreads))
+        if (thread.Owner?.Id != user.Id && (user is not IGuildUser guildUser || !guildUser.GuildPermissions.ManageThreads))
         {
             await respondAsync("You are not allowed to mark this post as solved!");
             return;
@@ -279,7 +279,7 @@ public class SolvedPostsService : IService, IInitializableService
             await component.RespondAsync("Unable to reopen locked post.", flags: MessageFlags.Ephemeral);
             return;
         }
-        if (thread.Owner.Id != component.User.Id && (component.User is not SocketGuildUser guildUser || !guildUser.GuildPermissions.ManageThreads))
+        if (thread.Owner?.Id != component.User.Id && (component.User is not SocketGuildUser guildUser || !guildUser.GuildPermissions.ManageThreads))
         {
             await component.RespondAsync("You are not allowed to reopen this post!", flags: MessageFlags.Ephemeral);
             return;
