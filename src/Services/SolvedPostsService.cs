@@ -17,13 +17,13 @@ public class SolvedPostsService : IService, IInitializableService
 {
     private const string SolvedTag = "Solved";
     
-    private const string SolvedDefaultDescription = "When your question is answered either use `/solved` or the button below to mark the question as resolved.\n\nRemember to ask __specific questions__ and provide __relevant details__.";
+    private const string SolvedDefaultDescription = "When your question is answered either use `/support solved` or the button below to mark the question as resolved.\n\nRemember to ask __specific questions__ and provide __relevant details__.";
     private const string SolvedButtonId = "MarkAsSolvedButton";
     
     private const string ReopenDefaultDescription = "Thank you for marking this question as solved. You're welcome to make a new post if you have another question!\n\n*This post is now set to auto-hide after one hour of inactivity.*";
     private const string ReopenButtonId = "ReopenSolvedButton";
 
-    private const string StaleDefaultDescription = "This question is considered stale and has been closed.\nIf your question was answered do `/solved`.\nIf your question was **not** answered feel free to bump it or repost.";
+    private const string StaleDefaultDescription = "This question is considered stale and has been closed.\nIf your question was answered do `/support solved`.\nIf your question was **not** answered feel free to bump it or repost.";
 
     public record SolvedForumChannel(ulong ChannelId, string? SolvedDescription = null, string? ReopenDescription = null, string? StaleDescription = null, params string[]? IgnoreWithTags);
     public record RegisteredSolvedChannel(SolvedForumChannel SolvedChannel, ulong SolvedTag, ulong[] IgnoreWithTags);
@@ -228,7 +228,7 @@ public class SolvedPostsService : IService, IInitializableService
             await respondAsync("Unable to mark locked thread as solved.");
             return;
         }
-        if (thread.Owner.Id != user.Id && (user is not IGuildUser guildUser || !guildUser.GuildPermissions.ManageThreads))
+        if (thread.Owner?.Id != user.Id && (user is not IGuildUser guildUser || !guildUser.GuildPermissions.ManageThreads))
         {
             await respondAsync("You are not allowed to mark this post as solved!");
             return;
@@ -279,7 +279,7 @@ public class SolvedPostsService : IService, IInitializableService
             await component.RespondAsync("Unable to reopen locked post.", flags: MessageFlags.Ephemeral);
             return;
         }
-        if (thread.Owner.Id != component.User.Id && (component.User is not SocketGuildUser guildUser || !guildUser.GuildPermissions.ManageThreads))
+        if (thread.Owner?.Id != component.User.Id && (component.User is not SocketGuildUser guildUser || !guildUser.GuildPermissions.ManageThreads))
         {
             await component.RespondAsync("You are not allowed to reopen this post!", flags: MessageFlags.Ephemeral);
             return;

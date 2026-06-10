@@ -38,13 +38,14 @@ public sealed class PirateJim
         _services.Add(new AutomaticMessageService(this));
         _services.Add(new RemoveInvalidGuideTagService(this));
         _services.Add(new SolvedPostsService(this));
+        _services.Add(new BlockScamMessageService(this));
         
         await DiscordClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("PJ_TOKEN"));
         
         await DiscordClient.StartAsync();
 
         await DiscordClient.SetGameAsync("Yarrrr!");
-      
+
         foreach (var service in _services)
         {
             if (service is IInitializableService initializableService)

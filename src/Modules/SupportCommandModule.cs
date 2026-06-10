@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Discord;
+using Discord.Interactions;
+using Newtonsoft.Json.Linq;
+using SomeCatIDK.PirateJim.HTTP;
+using SomeCatIDK.PirateJim.Services;
+using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Discord;
-using Discord.Interactions;
-using Newtonsoft.Json.Linq;
 
 namespace SomeCatIDK.PirateJim.Modules;
 
@@ -120,5 +123,18 @@ public class SupportCommandModule : InteractionModuleBase
 
             await RespondAsync("Failed to get Unity version from GitHub Unturned-Datamining. (internal error)");
         }
+    }
+
+    [SlashCommand("solved", "Marks the current support thread as solved.")]
+    public async Task Solved()
+    {
+        // Not sure what the best way to get the service here is
+        if (PirateREST.DiscordApp.Services.FirstOrDefault(s => s is SolvedPostsService) is not SolvedPostsService service) return;
+
+        await service.MarkAsSolvedAsync(null, Context.Channel, Context.User, response =>
+        {
+            if (string.IsNullOrEmpty(response)) return RespondAsync("You've marked this post as solved.", flags: MessageFlags.Ephemeral);
+            return RespondAsync(response, flags: MessageFlags.Ephemeral);
+        });
     }
 }
