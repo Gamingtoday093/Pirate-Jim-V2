@@ -12,18 +12,12 @@ public static class AutofacExtensions
     public static IRegistrationBuilder<TLimit, TActivatorData, TStyle> InstancePerServiceLifetime<TLimit, TActivatorData, TStyle>
         (this IRegistrationBuilder<TLimit, TActivatorData, TStyle> registration, ServiceLifetime serviceLifetime)
     {
-        switch (serviceLifetime)
+        return serviceLifetime switch
         {
-            case ServiceLifetime.Singleton:
-                registration.SingleInstance();
-                break;
-            case ServiceLifetime.Scoped:
-                registration.InstancePerLifetimeScope();
-                break;
-            case ServiceLifetime.Transient:
-                registration.InstancePerDependency();
-                break;
-        }
-        return registration;
+            ServiceLifetime.Singleton => registration.SingleInstance(),
+            ServiceLifetime.Scoped => registration.InstancePerLifetimeScope(),
+            ServiceLifetime.Transient => registration.InstancePerDependency(),
+            _ => registration
+        };
     }
 }
